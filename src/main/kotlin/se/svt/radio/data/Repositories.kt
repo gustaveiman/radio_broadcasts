@@ -18,7 +18,7 @@ class SRBroadcasts : BroadcastRepository {
     private suspend fun getProgramId(programName: ProgramName): Int {
         val programsUrl = "https://api.sr.se/api/v2/programs?format=json&pagination=false"
         val response = Fuel.get(programsUrl).awaitObject(ProgramResponseDeserializer)
-        return response.programs.singleOrNull{it.name == programName.toString()}?.id
+        return response.programs.singleOrNull{it.name.lowercase() == programName.toString().lowercase()}?.id
             ?: throw ProgramNotFound()
     }
 }
