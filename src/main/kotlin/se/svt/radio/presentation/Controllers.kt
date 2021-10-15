@@ -12,15 +12,10 @@ class BroadcastResource(val broadcastService: BroadcastService) {
 
     @GetMapping("/broadcasts")
     suspend fun broadcasts(@RequestParam programName: String): List<BroadcastDto> {
-        try {
-            // Conversion needs to go here as we cannot use "value classes" as @RequestParam.
-            // See: https://github.com/spring-projects/spring-framework/issues/27345
-            val name = ProgramName(programName)
-            return broadcastService.get(name).map { BroadcastDto.fromModel(it) }
-        } catch (e: IllegalArgumentException) {
-            throw HttpBadProgramName()
-        } catch (to: TimeoutCancellationException) {
-            throw HttpTemporaryOverload()
-        }
+        // Conversion needs to go here as we cannot use "value classes" as @RequestParam.
+        // See: https://github.com/spring-projects/spring-framework/issues/27345
+        val name = ProgramName(programName)
+        return broadcastService.get(name).map { BroadcastDto.fromModel(it) }
+
     }
 }
